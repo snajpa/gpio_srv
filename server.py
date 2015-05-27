@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+import os
+
 from twisted.internet import reactor, protocol
 from twisted.protocols.basic import LineReceiver
 
@@ -37,6 +39,10 @@ def handle(msg, val):
 class GPIO(LineReceiver):
 
     def dataReceived(self, data):
+        
+        status = os.popen("sudo /home/pi/DHT22/dht22 22").read()
+        self.transport.write(status)
+        
         if len(data) >= 2:
             msg, val = decode(data)
             handle(msg, val)
